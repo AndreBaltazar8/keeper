@@ -1,0 +1,9 @@
+builders:
+  keeper_codegen:
+    target: ":keeper_codegen"
+    import: "package:keeper_codegen/keeper_codegen.dart"
+    builder_factories: [ "getBuilder" ]
+    build_extensions: { ".dart": [ ".keeper.g.dart" ] }
+    auto_apply: dependents
+    build_to: cache
+    applies_builders: [ "source_gen|combining_builder" ]
