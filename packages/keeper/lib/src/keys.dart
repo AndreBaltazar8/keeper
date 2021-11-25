@@ -1,3 +1,9 @@
-class KeepKey {}
+abstract class KeepKey<T> {
+  T? get value;
+  set value(T? value);
+}
 
-class KeepAsyncKey {}
+abstract class KeepAsyncKey<T> {
+  Future<T?> get();
+  Future<void> set(T? value);
+}
