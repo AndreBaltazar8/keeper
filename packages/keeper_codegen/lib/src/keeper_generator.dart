@@ -4,6 +4,7 @@ import 'package:analyzer/dart/element/type_system.dart';
 import 'package:build/build.dart';
 import 'package:collection/collection.dart';
 import 'package:keeper/keeper.dart';
+import 'package:keeper_codegen/src/kept_class_visitor.dart';
 import 'package:source_gen/source_gen.dart';
 
 const _keptAnnotationName = '@kept';
@@ -19,15 +20,20 @@ class KeeperGenerator extends GeneratorForAnnotation<MakeKept> {
       throw 'Only classes can have $_keptAnnotationName annotation.';
     }
 
-    final classElement = await _findMainClass(element, buildStep);
-    if (classElement == null) {
+    final mainClass = await _findMainClass(element, buildStep);
+    if (mainClass == null) {
       throw '''
-      Can\'t generate mixin for $_keptAnnotationName.
-      The annotation must be placed in the private class.
-      ''';
+Can\'t generate mixin for $_keptAnnotationName.
+The annotation must be placed in the private class.
+''';
     }
 
-    return 'mixin _\$${classElement.name}Keeper {}';
+    final visitor = KeptClassVisitor(
+      (element as ClassElement).name,
+      mainClass.name,
+    );
+    element.accept(visitor);
+    return visitor.generateSource();
   }
 
   Future<ClassElement?> _findMainClass(
