@@ -15,3 +15,17 @@ class _Counter {
     value++;
   }
 }
+
+void main() {
+  final counter = Counter();
+  print(counterValue().value); // prints null
+  counter.increment();
+  print(counterValue().value); // prints 1
+  counter.increment();
+  print(counterValue().value); // prints 2
+  final counter2 = Counter();
+  counter2.increment();
+  print(counterValue().value); // prints 3
+  counter2.increment();
+  print(counterValue().value); // prints 4
+}
