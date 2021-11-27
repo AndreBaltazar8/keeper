@@ -25,10 +25,12 @@ class KeptClassVisitor extends SimpleElementVisitor {
   @override
   void visitFieldElement(FieldElement element) {
     final atAnnotations = _atAnnotationChecker.annotationsOf(element);
-    if (atAnnotations.isEmpty) return;
+    final atAsyncAnnotations = _atAsyncAnnotationChecker.annotationsOf(element);
+    if (atAnnotations.isEmpty && atAsyncAnnotations.isEmpty) return;
     _keptFields.add(KeptField(
       field: element,
       atAnnotations: atAnnotations.toList(),
+      atAsyncAnnotations: atAsyncAnnotations.toList(),
     ));
   }
 
@@ -41,6 +43,7 @@ class KeptClassVisitor extends SimpleElementVisitor {
     final keysInitBuffer = StringBuffer();
     final keysSetBuffer = StringBuffer();
     String? firstKeyName;
+    String? firstValueCast;
     keptField.atAnnotations.forEachIndexed((index, annotation) {
       final keepKeyName = '_\$${fieldName}KeepKey\$$index';
       firstKeyName = firstKeyName ?? keepKeyName;
@@ -50,6 +53,15 @@ class KeptClassVisitor extends SimpleElementVisitor {
       keysInitBuffer.writeln('$keepKeyName = ${function!.displayName}();');
       keysSetBuffer.writeln('$keepKeyName!.value = value;');
     });
+    keptField.atAsyncAnnotations.forEachIndexed((index, annotation) {
+      final keepKeyName = '_\$${fieldName}KeepAsyncKey\$$index';
+      firstKeyName = firstKeyName ?? keepKeyName;
+      firstValueCast = firstValueCast ?? ' as $typeName';
+      keysBuffer.writeln('KeepAsyncKey? $keepKeyName;');
+      final function = annotation.getField('key')?.toFunctionValue();
+      keysInitBuffer.writeln('$keepKeyName = ${function!.displayName}();');
+      // TODO: generate setters for async
+    });
 
     return '''
     $keysBuffer
@@ -58,7 +70,7 @@ class KeptClassVisitor extends SimpleElementVisitor {
     $typeName get $fieldName {
       if ($firstKeyName == null) {
         $keysInitBuffer
-        final _keyValue = $firstKeyName!.value;
+        final _keyValue = $firstKeyName!.value${firstValueCast ?? ''};
         if (_keyValue != super.$fieldName${fieldIsNullable ? '' : ' && _keyValue != null'}) super.$fieldName = _keyValue;
       }
       return super.$fieldName;
@@ -91,26 +103,35 @@ class KeptField {
   KeptField({
     required this.field,
     required this.atAnnotations,
+    required this.atAsyncAnnotations,
   });
 
   final FieldElement field;
   final List<DartObject> atAnnotations;
+  final List<DartObject> atAsyncAnnotations;
 }
 
 final _atAnnotationChecker = const TypeChecker.fromRuntime(At);
+final _atAsyncAnnotationChecker = const TypeChecker.fromRuntime(AtAsync);
 
 extension _FieldElementExtension on FieldElement {
   String get typeName {
-    final type = this.type;
-    final typeElement = type.element;
-    if (type is FunctionType) {
-      throw 'Field type not supported for $name';
-    } else if (typeElement == null || type is TypeParameterType) {
-      throw 'Field type not supported for $name';
+    return type.toStringTypeName(library);
+  }
+}
+
+extension _DartTypeExtension on DartType {
+  String toStringTypeName(LibraryElement library) {
+    final typeElement = element;
+    if (this is FunctionType) {
+      throw 'Field type not supported for ${getDisplayString(withNullability: true)}';
+    } else if (typeElement == null || this is TypeParameterType) {
+      throw 'Field type not supported for ${getDisplayString(withNullability: true)}';
     }
 
-    return _getElementTypeName(type, typeElement, library) +
-        type.nullabilitySuffix.stringForTypeName;
+    return _getElementTypeName(this, typeElement, library) +
+        _buildStringForGenericTypes(this, library) +
+        nullabilitySuffix.stringForTypeName;
   }
 
   static _getElementTypeName(
@@ -132,6 +153,25 @@ extension _FieldElementExtension on FieldElement {
 
     if (importName != null) return importName.key;
     throw 'Cannot find type name for $typeElement';
+  }
+
+  static _buildStringForGenericTypes(
+    DartType type,
+    LibraryElement library,
+  ) {
+    List<DartType>? genericTypes;
+    if (type is ParameterizedType) {
+      genericTypes = type.typeArguments;
+    } else if (type is FunctionType) {
+      genericTypes = type.alias?.typeArguments;
+    }
+
+    if (genericTypes != null && genericTypes.isNotEmpty) {
+      String getTypeName(DartType e) => e.toStringTypeName(library);
+      return '<${genericTypes.map(getTypeName).join(',')}>';
+    }
+
+    return '';
   }
 }
 

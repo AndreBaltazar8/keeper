@@ -28,12 +28,12 @@ class _DefaultKeepAsyncValue<T> implements KeepAsyncValue<T> {
   }
 
   @override
-  Future<void> set(T value) async {
+  Future<void> set(T? value) async {
     throw UnsupportedError('Cannot set value on default async value.');
   }
 
   @override
-  set value(T value) {
+  set value(T? value) {
     set(value).catchError((_, __) {});
   }
 }
