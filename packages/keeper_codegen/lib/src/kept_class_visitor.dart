@@ -71,6 +71,12 @@ class KeptClassVisitor extends SimpleElementVisitor {
 
     final checkValueNull =
         fieldIsNullable || isAsync ? '' : ' && _keyValue != null';
+
+    final valueInit = '''
+        final _keyValue = $firstKeyName!.value${firstValueCast ?? ''};
+        if (_keyValue != super.$fieldName$checkValueNull) super.$fieldName = _keyValue;
+    ''';
+
     return '''
     $keysBuffer
     
@@ -78,8 +84,7 @@ class KeptClassVisitor extends SimpleElementVisitor {
     $typeName get $fieldName {
       if ($firstKeyName == null) {
         $keysInitBuffer
-        final _keyValue = $firstKeyName!.value${firstValueCast ?? ''};
-        if (_keyValue != super.$fieldName$checkValueNull) super.$fieldName = _keyValue;
+        $valueInit
       }
       return super.$fieldName;
     }
@@ -88,9 +93,10 @@ class KeptClassVisitor extends SimpleElementVisitor {
     set $fieldName($typeName value) {
       if ($firstKeyName == null) {
         $keysInitBuffer
+        ${isAsync ? valueInit : ''}
       }
       $keysSetBuffer
-      super.$fieldName = value;
+      ${isAsync ? '' : 'super.$fieldName = value;'}
     }
     ''';
   }
