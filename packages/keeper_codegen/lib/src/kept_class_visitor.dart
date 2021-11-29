@@ -35,13 +35,16 @@ class KeptClassVisitor extends SimpleElementVisitor {
   }
 
   String _generateField(KeptField keptField) {
+    final isAsync = keptField.atAsyncAnnotations.isNotEmpty;
     final typeName = keptField.field.typeName;
     final fieldName = keptField.field.name;
     final fieldIsNullable =
         keptField.field.type.nullabilitySuffix == NullabilitySuffix.question;
+
     final keysBuffer = StringBuffer();
     final keysInitBuffer = StringBuffer();
     final keysSetBuffer = StringBuffer();
+
     String? firstKeyName;
     String? firstValueCast;
     keptField.atAnnotations.forEachIndexed((index, annotation) {
@@ -60,9 +63,12 @@ class KeptClassVisitor extends SimpleElementVisitor {
       keysBuffer.writeln('KeepAsyncKey? $keepKeyName;');
       final function = annotation.getField('key')?.toFunctionValue();
       keysInitBuffer.writeln('$keepKeyName = ${function!.displayName}();');
-      // TODO: generate setters for async
+      keysSetBuffer
+          .writeln('value.get().then((value) => $keepKeyName!.set(value));');
     });
 
+    final checkValueNull =
+        fieldIsNullable || isAsync ? '' : ' && _keyValue != null';
     return '''
     $keysBuffer
     
@@ -71,7 +77,7 @@ class KeptClassVisitor extends SimpleElementVisitor {
       if ($firstKeyName == null) {
         $keysInitBuffer
         final _keyValue = $firstKeyName!.value${firstValueCast ?? ''};
-        if (_keyValue != super.$fieldName${fieldIsNullable ? '' : ' && _keyValue != null'}) super.$fieldName = _keyValue;
+        if (_keyValue != super.$fieldName$checkValueNull) super.$fieldName = _keyValue;
       }
       return super.$fieldName;
     }

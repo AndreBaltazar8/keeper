@@ -15,8 +15,7 @@ mixin _$CounterAsyncKeeper on _CounterAsync {
       _$valueKeepAsyncKey$0 = counterAsyncValue();
 
       final _keyValue = _$valueKeepAsyncKey$0!.value as KeepAsyncValue<int>;
-      if (_keyValue != super.value && _keyValue != null)
-        super.value = _keyValue;
+      if (_keyValue != super.value) super.value = _keyValue;
     }
     return super.value;
   }
@@ -26,6 +25,7 @@ mixin _$CounterAsyncKeeper on _CounterAsync {
     if (_$valueKeepAsyncKey$0 == null) {
       _$valueKeepAsyncKey$0 = counterAsyncValue();
     }
+    value.get().then((value) => _$valueKeepAsyncKey$0!.set(value));
 
     super.value = value;
   }
