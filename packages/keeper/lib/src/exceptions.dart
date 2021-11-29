@@ -1,3 +1,4 @@
+/// An exception that happens inside Keeper.
 class KeeperException implements Exception {
   final String message;
 
