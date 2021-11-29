@@ -44,6 +44,7 @@ class KeptClassVisitor extends SimpleElementVisitor {
     final keysBuffer = StringBuffer();
     final keysInitBuffer = StringBuffer();
     final keysSetBuffer = StringBuffer();
+    final fieldLibrary = keptField.field.library;
 
     String? firstKeyName;
     String? firstValueCast;
@@ -51,10 +52,9 @@ class KeptClassVisitor extends SimpleElementVisitor {
       final keepKeyName = '_\$${fieldName}KeepKey\$$index';
       firstKeyName = firstKeyName ?? keepKeyName;
       keysBuffer.writeln('KeepKey? $keepKeyName;');
-      final function = annotation.getField('key')?.toFunctionValue();
-      if (function == null)
-        throw KeeperException('Parameter \'key\' must be a function.');
-      keysInitBuffer.writeln('$keepKeyName = ${function.fullName}();');
+      final function = _ensureKeyFunction(annotation);
+      final functionName = function.getFullNameInLib(fieldLibrary);
+      keysInitBuffer.writeln('$keepKeyName = ${functionName}();');
       keysSetBuffer.writeln('$keepKeyName!.value = value;');
     });
     keptField.atAsyncAnnotations.forEachIndexed((index, annotation) {
@@ -62,8 +62,9 @@ class KeptClassVisitor extends SimpleElementVisitor {
       firstKeyName = firstKeyName ?? keepKeyName;
       firstValueCast = firstValueCast ?? ' as $typeName';
       keysBuffer.writeln('KeepAsyncKey? $keepKeyName;');
-      final function = annotation.getField('key')?.toFunctionValue();
-      keysInitBuffer.writeln('$keepKeyName = ${function!.displayName}();');
+      final function = _ensureKeyFunction(annotation);
+      final functionName = function.getFullNameInLib(fieldLibrary);
+      keysInitBuffer.writeln('$keepKeyName = ${functionName}();');
       keysSetBuffer
           .writeln('value.get().then((value) => $keepKeyName!.set(value));');
     });
@@ -92,6 +93,13 @@ class KeptClassVisitor extends SimpleElementVisitor {
       super.$fieldName = value;
     }
     ''';
+  }
+
+  ExecutableElement _ensureKeyFunction(DartObject annotation) {
+    final function = annotation.getField('key')?.toFunctionValue();
+    if (function == null)
+      throw KeeperException('Parameter \'key\' must be a function.');
+    return function;
   }
 
   String generateSource() {
