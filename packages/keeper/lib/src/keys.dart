@@ -8,5 +8,5 @@ abstract class KeepKey<T> {
 abstract class KeepAsyncKey<T> {
   Future<T?> get();
   Future<void> set(T? value);
-  KeepAsyncValue<T> get value;
+  KeepAsyncValue<T> value({required KeepAsyncValue<T>? defaultValue});
 }

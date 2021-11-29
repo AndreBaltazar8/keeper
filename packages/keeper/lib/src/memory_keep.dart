@@ -1,4 +1,5 @@
 import 'package:keeper/keeper.dart';
+import 'package:keeper/src/keep_async_value.dart';
 
 class MemoryKeep {
   final Map<String, dynamic> _values = {};
@@ -47,18 +48,30 @@ class _MemoryKeepAsyncKey<T> extends KeepAsyncKey<T> {
   }
 
   @override
-  KeepAsyncValue<T> get value => _MemoryKeepAsyncValue(this);
+  KeepAsyncValue<T> value({KeepAsyncValue<T>? defaultValue}) =>
+      _MemoryKeepAsyncValue(
+          this,
+          defaultValue is DefaultKeepAsyncValue<T>
+              ? defaultValue.defaultValue
+              : null);
 }
 
 class _MemoryKeepAsyncValue<T> implements KeepAsyncValue<T> {
   final _MemoryKeepAsyncKey<T> asyncKey;
-  _MemoryKeepAsyncValue(this.asyncKey);
+  final T? defaultValue;
+
+  _MemoryKeepAsyncValue(this.asyncKey, this.defaultValue);
 
   @override
   Future<T> get() async {
-    final value = await asyncKey.get();
-    if (value == null) throw 'Unknown value';
-    return value;
+    try {
+      return await asyncKey.get() as T;
+    } on TypeError {
+      if (defaultValue == null) {
+        throw KeeperException('No value for key ${asyncKey.key}.');
+      }
+      return defaultValue as T;
+    }
   }
 
   @override

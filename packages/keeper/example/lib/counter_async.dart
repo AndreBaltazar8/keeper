@@ -4,7 +4,7 @@ part 'counter_async.g.dart';
 
 class CounterAsync = _CounterAsync with _$CounterAsyncKeeper;
 
-KeepAsyncKey counterAsyncValue() => MemoryKeep().asyncKey('counter_async');
+KeepAsyncKey<int> counterAsyncValue() => MemoryKeep().asyncKey('counter_async');
 
 @kept
 class _CounterAsync {

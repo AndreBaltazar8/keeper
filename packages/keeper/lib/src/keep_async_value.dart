@@ -1,3 +1,5 @@
+import 'package:keeper/src/exceptions.dart';
+
 abstract class KeepAsyncValue<T> {
   set value(T value);
   Future<void> set(T value);
@@ -8,15 +10,15 @@ abstract class KeepAsyncValue<T> {
     required R Function(Object? error, StackTrace? stackTrace) error,
   });
 
-  const factory KeepAsyncValue(T value) = _DefaultKeepAsyncValue<T>;
+  const factory KeepAsyncValue(T value) = DefaultKeepAsyncValue<T>;
 }
 
-class _DefaultKeepAsyncValue<T> implements KeepAsyncValue<T> {
-  final T _value;
-  const _DefaultKeepAsyncValue(T value) : this._value = value;
+class DefaultKeepAsyncValue<T> implements KeepAsyncValue<T> {
+  final T defaultValue;
+  const DefaultKeepAsyncValue(this.defaultValue);
 
   @override
-  Future<T> get() => Future.value(_value);
+  Future<T> get() => Future.value(defaultValue);
 
   @override
   R map<R>({
@@ -24,12 +26,12 @@ class _DefaultKeepAsyncValue<T> implements KeepAsyncValue<T> {
     required R Function() loading,
     required R Function(Object? error, StackTrace? stackTrace) error,
   }) {
-    return data(_value);
+    return data(defaultValue);
   }
 
   @override
   Future<void> set(T? value) async {
-    throw UnsupportedError('Cannot set value on default async value.');
+    throw KeeperException('Cannot set value on default async value.');
   }
 
   @override

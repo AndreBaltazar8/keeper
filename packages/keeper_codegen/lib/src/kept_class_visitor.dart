@@ -68,12 +68,13 @@ class KeptClassVisitor extends SimpleElementVisitor {
       keysSetBuffer
           .writeln('value.get().then((value) => $keepKeyName!.set(value));');
     });
+    final String asyncDefault = isAsync ? '(defaultValue: super.value)' : '';
 
     final checkValueNull =
         fieldIsNullable || isAsync ? '' : ' && _keyValue != null';
 
     final valueInit = '''
-        final _keyValue = $firstKeyName!.value${firstValueCast ?? ''};
+        final _keyValue = $firstKeyName!.value$asyncDefault${firstValueCast ?? ''};
         if (_keyValue != super.$fieldName$checkValueNull) super.$fieldName = _keyValue;
     ''';
 

@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:keeper/keeper.dart';
 import 'package:keeper/src/keep_async_value.dart';
 
 void main() {
@@ -9,7 +10,7 @@ void main() {
 
   test('default async value returns the value', () {
     KeepAsyncValue value = KeepAsyncValue('Hello world!');
-    expect(value.set('test'), throwsA(isA<Error>()));
+    expect(value.set('test'), throwsA(isA<KeeperException>()));
     // the value remains unchanged
     expect(value.get(), completion('Hello world!'));
   });
