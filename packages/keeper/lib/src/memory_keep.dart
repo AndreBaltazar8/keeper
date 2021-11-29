@@ -2,7 +2,7 @@ import 'package:keeper/keeper.dart';
 import 'package:keeper/src/keep_async_value.dart';
 
 /// A Keep that is in memory. It is not persisted to disk.
-class MemoryKeep {
+class MemoryKeep implements Keep, AsyncKeep {
   final Map<String, dynamic> _values = {};
   static final MemoryKeep _instance = MemoryKeep.create();
 
@@ -12,10 +12,10 @@ class MemoryKeep {
   /// Returns a singleton instance of the keep.
   factory MemoryKeep() => _instance;
 
-  /// Returns a key in the keep.
+  @override
   KeepKey<T> key<T>(String key) => _MemoryKeepKey<T>(this, key);
 
-  /// Returns an async key in the keep.
+  @override
   KeepAsyncKey<T> asyncKey<T>(String key) => _MemoryKeepAsyncKey<T>(this, key);
 
   dynamic _get<T>(String key) {
