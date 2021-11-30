@@ -7,15 +7,15 @@ Keeper simplifies storage of state. Just point where it should be saved, and kee
 - ✅ Sync storage
 - 🚧 Async storage*
 - ❌ MobX store support
-- ❌ Imports with library prefix
 - ❌ Function types
+- ✅ Extensible for many storage containers
 
-Supported storage types:
+Supported storage containers:
 
 - ✅ In-memory storage 
-- ❌ Hive storage (through keeper_hive)
+- ✅ Hive storage (through [keeper_hive](https://pub.dev/packages/keeper_hive))
 
-<sub>* supports one async annotation per field</sub>
+<sub>* **supports one async annotation per field**</sub>
 
 <sub>✅ Available | 🚧 Under development | ❌ Unsupported</sub>
 
