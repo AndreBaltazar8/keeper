@@ -11,7 +11,7 @@ The Keeper Codegen is the package that provides the code generation for [Keeper]
 
 This package is used with Keeper to provide an easy setup for storing class fields in different storage containers.
 
-It is important to have you project setup to use Keeper, and then running the commands below to generate the files that will perform all the magic. ✨
+It is important to have you project setup to use Keeper, and then running the command below to generate the files that will perform all the magic. ✨
 
 ## Usage
 
