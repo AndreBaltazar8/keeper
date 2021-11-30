@@ -79,4 +79,4 @@ Different storage mechanisms may require different initialization.
 
 Contributions and bug reports are welcomed! Please include relevant information to help solve the bugs.
 
-This project is licensed under The MIT License (MIT) available at [LICENSE](./LICENSE).
+This project is licensed under The MIT License (MIT) available at [LICENSE](https://github.com/AndreBaltazar8/keeper/blob/master/packages/keeper/LICENSE).
