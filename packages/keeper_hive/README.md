@@ -10,14 +10,42 @@ Keeper Hive integrates [Keeper](https://pub.dev/packages/keeper) with [hive](htt
 
 This plugin requires having both `keeper` and `hive` installed. Take a look at the [Keeper's page](https://pub.dev/packages/keeper) for instructions on how to get started with Keeper.
 
+The application is required to initialize `hive` in the desired path, with either `Hive.init` or `Hive.initFlutter` depending on the platform and preference.
+
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder. 
+In `pubspec.yaml`:
+
+```yaml
+dependencies:
+  keeper_hive: ^0.0.1
+```
+
+(it is also required to have the base Keeper package installed)
+
+In your dart file:
 
 ```dart
-const like = 'sample';
+import 'package:keeper/keeper.dart';
+import 'package:keeper_hive/keeper_hive.dart';
+
+part 'counter.g.dart';
+
+class Counter = _Counter with _$CounterKeeper;
+
+KeepAsyncKey<int> counterAsyncValue() => HiveKeep('user').asyncKey('counter');
+
+@kept
+class _Counter {
+  @AtAsync(counterAsyncValue)
+  KeepAsyncValue<int> value = KeepAsyncValue(0);
+
+  Future increment() async {
+    await value.set(await value.get() + 1);
+  }
+}
 ```
+
 
 ## Additional information
 
