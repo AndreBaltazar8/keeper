@@ -1,5 +1,7 @@
 # Keeper
 
+[![pub package](https://img.shields.io/pub/v/keeper.svg)](https://pub.dev/packages/keeper)
+
 Keeper simplifies storage of state. Just point where it should be saved, and keeper takes care of the rest. You don't need to write code to load, save, and convert data, keeper takes care of that for you.
 
 ## 📜 Features

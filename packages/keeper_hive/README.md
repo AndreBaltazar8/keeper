@@ -1,5 +1,7 @@
 # Keeper Hive
 
+[![pub package](https://img.shields.io/pub/v/keeper_hive.svg)](https://pub.dev/packages/keeper_hive)
+
 Keeper Hive integrates [Keeper](https://pub.dev/packages/keeper) with [hive](https://pub.dev/packages/hive) allowing to save fields easily into Hive boxes.
 
 ## 📜 Features

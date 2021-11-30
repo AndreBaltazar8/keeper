@@ -1,5 +1,7 @@
 # Keeper Codegen
 
+[![pub package](https://img.shields.io/pub/v/keeper_codegen.svg)](https://pub.dev/packages/keeper_codegen)
+
 The Keeper Codegen is the package that provides the code generation for [Keeper](https://pub.dev/packages/keeper).
 
 ## Features
