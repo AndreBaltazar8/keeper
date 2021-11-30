@@ -1,39 +1,38 @@
-<!-- 
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# Keeper Codegen
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages). 
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages). 
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+The Keeper Codegen is the package that provides the code generation for [Keeper](https://pub.dev/packages/keeper).
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+- ✅ Support for common classes
+- ❌ MobX store support
 
 ## Getting started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+This package is used with Keeper to provide an easy setup for storing class fields in different storage containers.
+
+It is important to have you project setup to use Keeper, and then running the commands below to generate the files that will perform all the magic. ✨
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder. 
+In `pubspec.yaml`:
 
-```dart
-const like = 'sample';
+```yaml
+dev_dependencies:
+  build_runner: ^2.1.5 # check for recent version on pub.dev
+  keeper_codegen: ^0.0.1
+```
+
+To generate the `.g.dart` files for your classes run:
+
+```bash
+flutter pub run build_runner build
 ```
 
 ## Additional information
 
-TODO: Tell users more about the package: where to find more information, how to 
-contribute to the package, how to file issues, what response they can expect 
-from the package authors, and more.
+Keeper project can be found at [https://github.com/AndreBaltazar8/keeper](https://github.com/AndreBaltazar8/keeper)
+
+Contributions and bug reports are welcomed! Please include relevant information to help solve the bugs.
+
+This project is licensed under The MIT License (MIT) available at [LICENSE](./LICENSE).
