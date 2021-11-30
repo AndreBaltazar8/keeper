@@ -1,7 +1,7 @@
 name: keeper_hive
-description: Integration of Hive in Keeper as a provider of storage
+description: Integration of Hive in Keeper as a provider of storage keep.
 version: 0.0.1
-homepage:
+homepage: https://github.com/AndreBaltazar8/keeper
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -10,6 +10,3 @@ dependencies:
   keeper: ^0.0.1
   hive: ^2.0.4
 
-dependency_overrides:
-  keeper:
-    path: ../keeper

@@ -1,6 +1,6 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:keeper/keeper.dart';
 import 'package:keeper/src/keep_async_value.dart';
+import 'package:test/test.dart';
 
 void main() {
   test('default async value returns the value', () {

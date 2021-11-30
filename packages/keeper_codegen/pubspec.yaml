@@ -1,20 +1,17 @@
 name: keeper_codegen
 description: Code generator to generate mixin classes for Keeper package.
 version: 0.0.1
-homepage:
+homepage: https://github.com/AndreBaltazar8/keeper
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
+  keeper: ^0.0.1
   build: ^2.1.1
   source_gen: ^1.1.1
   analyzer: ^2.7.0
-  keeper: ^0.0.1
-
-dependency_overrides:
-  keeper:
-    path: ../keeper
+  collection: ^1.15.0
 
 dev_dependencies:
   test: ^1.19.4
