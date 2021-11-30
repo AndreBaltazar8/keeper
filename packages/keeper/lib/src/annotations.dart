@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:keeper/src/keys.dart';
 
 /// Declares that a class contains keys that should be kept.
