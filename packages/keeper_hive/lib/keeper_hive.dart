@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:hive/hive.dart';
 import 'package:keeper/keeper.dart';
 
+/// A Keep that stores its data in a Hive box.
 class HiveKeep implements AsyncKeep {
   static final Map<String, HiveKeep> _instances = {};
 
@@ -13,6 +14,7 @@ class HiveKeep implements AsyncKeep {
 
   HiveKeep._(this.boxName);
 
+  /// The name of the Hive box.
   final String boxName;
 
   @override
@@ -95,7 +97,8 @@ class _MemoryKeepAsyncValue<T> implements KeepAsyncValue<T> {
         return loading();
     } on TypeError {
       if (defaultValue == null) {
-        throw KeeperException('No value for key ${asyncKey.key}.');
+        final err = KeeperException('No value for key ${asyncKey.key}.');
+        return error(err, null);
       }
       return data(defaultValue as T);
     }
